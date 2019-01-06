@@ -13,8 +13,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
-    //de esta manera importams las rutas del usuario
-app.use(require('./routes/usuario'));
+    //de esta manera importams las rutas haciendo referencia al index
+    //config global de rutas
+app.use(require('./routes/index'));
 
 
 //CONEXION A MONGO DB A SU BASE DE DATOS CAFE

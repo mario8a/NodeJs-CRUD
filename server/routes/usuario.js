@@ -2,12 +2,15 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore')
 const Usuario = require('../models/usuario');
+const { verificaToken } = require('../middlewares/autenticacion');
+const { verificaAdmin_Role } = require('../middlewares/autenticacion');
 
 const app = express();
 
 
-
-app.get('/usuario', function(req, res) {
+// los middlewares con como receptores de todas las peticiones (que pasen por él), y ejecutan un código ANTES de llegar a la resolución de una ruta en particular.
+//el segundo argumento es el middleware
+app.get('/usuario', verificaToken, (req, res) => {
 
     //{estado : true} para mostrar solo los de estado activo
 
@@ -53,11 +56,13 @@ app.get('/usuario', function(req, res) {
 //POSTMAN {{url}}/usuario?limite=5&desde=10
 
 //POST ES PARA CREAR NUEVOS REGISTROS
-app.post('/usuario', function(req, res) {
+//Mandando 2 middlewares []
+app.post('/usuario', [verificaToken, verificaAdmin_Role], function(req, res) {
 
     let body = req.body;
 
     //esto crea una unstancia del esquema usuario con sus  propiedades
+    //encriptando el password con bcrypt con 10 vueltas
     let usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
@@ -89,7 +94,8 @@ app.post('/usuario', function(req, res) {
 });
 
 //PUT ES PARA ACTUALZAR REGISTROS
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
+
     //ese id despues del params se refiera al id de arriba (/:id)
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
@@ -114,7 +120,7 @@ app.put('/usuario/:id', function(req, res) {
 
 });
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     //obnteniendo el id
     let id = req.params.id;
 
