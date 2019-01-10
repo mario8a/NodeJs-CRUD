@@ -46,3 +46,10 @@ process.env.URLDB = urlDB;
 //mongodb: //localhost:27017/cafe
 //conexion remota
 //mongodb: //<dbuser>:<dbpassword>@ds129831.mlab.com:29831/cafe//
+
+
+// =======================
+// Google client ID
+//==========================
+
+process.env.CLIENT_ID = process.env.CLIENT_ID || "420338328011-0ooala3rme7si22l1b14e5kpp485du78.apps.googleusercontent.com"
